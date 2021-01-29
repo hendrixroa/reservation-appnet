@@ -4,32 +4,36 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using reservation_appnet.Data;
 using reservation_appnet.Models;
 
 namespace reservation_appnet.Controllers
 {
-    [Route("/[controller]")]
+    [Route("/contact/types")]
     [ApiController]
     public class ContactTypeController : ControllerBase
     {
         private readonly ReservationContext _context;
+        private readonly ILogger<ContactTypeController> _logger;
 
-        public ContactTypeController(ReservationContext context)
+
+        public ContactTypeController(ReservationContext context, ILogger<ContactTypeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        // GET: api/ContactType
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContactType>>> GetContactType()
+        public async Task<ActionResult<IEnumerable<ContactTypeListDTO>>> ListContactType()
         {
-            return await _context.ContactTypes.ToListAsync();
+            return await _context.ContactTypes
+                .Select(contactType => ContactTypeListToDTO(contactType))
+                .ToListAsync();
         }
 
-        // GET: api/ContactType/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ContactType>> GetBaseModel(int id)
+        public async Task<ActionResult<ContactType>> DetailContactType(int id)
         {
             var contactType = await _context.ContactTypes.FindAsync(id);
 
@@ -41,16 +45,15 @@ namespace reservation_appnet.Controllers
             return contactType;
         }
 
-        // PUT: api/ContactType/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContactType(int id, ContactType contactType)
+        public async Task<IActionResult> PutContactType(int id, ContactTypeCreateDTO contactTypeCreateDTO)
         {
-            if (id != contactType.Id)
+            if (!ContactTypeExists(id))
             {
-                return BadRequest();
+                return NotFound();
             }
 
+            var contactType = new ContactType { Id = id, Description = contactTypeCreateDTO.Description, UpdatedAt = DateTime.UtcNow};
             _context.Entry(contactType).State = EntityState.Modified;
 
             try
@@ -59,37 +62,29 @@ namespace reservation_appnet.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ContactTypeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
             return NoContent();
         }
 
-        // POST: api/ContactType
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ContactType>> PostContactType([Bind("Description")] ContactType contactType)
+        public async Task<ActionResult> PostContactType(ContactTypeCreateDTO contactTypeCreateDTO)
         {
             try
             {
+                var contactType = new ContactType { Description = contactTypeCreateDTO.Description, CreatedAt = DateTime.UtcNow };
                 _context.ContactTypes.Add(contactType);
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
-            catch (Exception /* ex */)
+            catch (DbUpdateException ex/* ex */)
             {
-                                
+                _logger.LogError(ex.ToString());
+                return BadRequest(ex);
             }
-            return CreatedAtAction("GetContactType", new { id = contactType.Id }, contactType);
+            return NoContent();
         }
 
-        // DELETE: api/ContactType/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteContactType(int id)
         {
@@ -109,5 +104,13 @@ namespace reservation_appnet.Controllers
         {
             return _context.ContactTypes.Any(e => e.Id == id);
         }
-    }
+
+        private static ContactTypeListDTO ContactTypeListToDTO(ContactType contactType) =>
+            new ContactTypeListDTO
+            {
+                Id = contactType.Id,
+                Description = contactType.Description
+            };
+        }
+
 }
