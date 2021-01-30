@@ -5,8 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { EditContactTypeComponent } from './contact-type/edit-contact-type/edit-contact-type.component';
 import { AddContactTypeComponent } from './contact-type/add-contact-type/add-contact-type.component';
 import { ListContactTypeComponent } from './contact-type/list-contact-type/list-contact-type.component';
@@ -19,14 +17,13 @@ import { ListReservationComponent } from './reservation/list-reservation/list-re
 
 import {routing} from "./app.routing";
 import { ContactTypeService } from "./services/contact.type.service";
-import { ContactService } from './services/contact.service'; 
+import { ContactService } from './services/contact.service';
+import { ReservationService } from "./services/reservation.service";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
-    FetchDataComponent,
     EditContactTypeComponent,
     AddContactTypeComponent,
     ListContactTypeComponent,
@@ -47,6 +44,7 @@ import { ContactService } from './services/contact.service';
   providers: [
     ContactTypeService,
     ContactService,
+    ReservationService,
   ],
   bootstrap: [AppComponent]
 })

@@ -2,7 +2,7 @@ import { Component, OnInit , Inject} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {first} from "rxjs/operators";
-import { ContactType } from "../../model/contact.type.model";
+import { ContactType } from "../../models/contact.type.model";
 import { ContactTypeService } from "../../services/contact.type.service";
 
 @Component({

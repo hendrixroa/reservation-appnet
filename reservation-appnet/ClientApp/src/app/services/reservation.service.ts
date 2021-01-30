@@ -1,12 +1,12 @@
 import {Inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable} from "rxjs/index";
-import {Contact} from "../models/contact.model";
+import {CreateReservation} from "../models/create.reservation.model";
 
 @Injectable()
-export class ContactService {
+export class ReservationService {
   private readonly baseUrl: string;
-  private nameEndpoint: string = 'contacts';
+  private nameEndpoint: string = 'reservations';
 
   constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
     this.baseUrl = baseUrl + this.nameEndpoint;
@@ -20,12 +20,12 @@ export class ContactService {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
 
-  create(createContactPayload: Contact) : Observable<any> {
-    return this.http.post<any>(this.baseUrl, createContactPayload);
+  create(createReservationPayload: CreateReservation) : Observable<any> {
+    return this.http.post<any>(this.baseUrl, createReservationPayload);
   }
 
-  update(id: number, updateContactPayload: Contact) {
-    return this.http.put<any>(`${this.baseUrl}/${id}`, updateContactPayload);
+  update(id: number, updateReservationPayload: CreateReservation) {
+    return this.http.put<any>(`${this.baseUrl}/${id}`, updateReservationPayload);
   }
 
   delete(id: number) {
