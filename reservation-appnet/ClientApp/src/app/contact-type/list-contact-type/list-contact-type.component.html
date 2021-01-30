@@ -1,0 +1,22 @@
+<div class="col-md-6 contact-type-list-container">
+    <h2 style="margin: auto"> Contact types</h2>
+    <button class="btn btn-danger" style="width:100px" (click)="add()"> Add</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="hidden">Id</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let type of contactTypes">
+                <td class="hidden">{{type.Id}}</td>
+                <td>{{type.Description}}</td>
+                <td>
+                    <button class="btn btn-success" (click)="delete(type.Id)"> Delete</button>
+                    <button class="btn btn-success" (click)="edit(type.Id)" style="margin-left: 20px;"> Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

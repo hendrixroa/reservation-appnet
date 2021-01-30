@@ -35,10 +35,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="obj\Debug\net5.0\Razor\Pages\_ViewImports.cshtml.g.cs" />
+    <None Remove="obj\Debug\net5.0\Razor\Pages\_ViewImports.cshtml.g.cs" />
+    <None Remove="obj\Debug\net5.0\Razor\Pages\Error.cshtml.g.cs" />
+    <None Remove="obj\Debug\net5.0\Razor\Pages\_ViewImports.cshtml.g.cs" />
+    <None Remove="obj\Debug\net5.0\Razor\Pages\Error.cshtml.g.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     <None Include="..\.editorconfig" />
+    <None Include="**/*" />
+    <None Include="**/*" />
+    <None Include="**/*" />
   </ItemGroup>
 
   <ItemGroup>

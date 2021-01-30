@@ -1,0 +1,12 @@
+<div class="col-md-6 edit-contact-type-container">
+    <h2 class="text-center">edit ContactType</h2>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+            <label for="Description">Description :</label>
+            <input type="text" formControlName="Description" placeholder="Description" name="Description" class="form-control" id="Description">
+        </div>
+
+        <button class="btn btn-success">edit</button>
+    </form>
+</div>

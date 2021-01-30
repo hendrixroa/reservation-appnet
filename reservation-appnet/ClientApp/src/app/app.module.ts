@@ -1,34 +1,51 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { EditContactTypeComponent } from './contact-type/edit-contact-type/edit-contact-type.component';
+import { AddContactTypeComponent } from './contact-type/add-contact-type/add-contact-type.component';
+import { ListContactTypeComponent } from './contact-type/list-contact-type/list-contact-type.component';
+import { ListContactComponent } from './contact/list-contact/list-contact.component';
+import { AddContactComponent } from './contact/add-contact/add-contact.component';
+import { EditContactComponent } from './contact/edit-contact/edit-contact.component';
+import { EditReservationComponent } from './reservation/edit-reservation/edit-reservation.component';
+import { AddReservationComponent } from './reservation/add-reservation/add-reservation.component';
+import { ListReservationComponent } from './reservation/list-reservation/list-reservation.component';
+
+import {routing} from "./app.routing";
+import {ContactTypeService} from "./services/contact.type.service";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
+    EditContactTypeComponent,
+    AddContactTypeComponent,
+    ListContactTypeComponent,
+    ListContactComponent,
+    AddContactComponent,
+    EditContactComponent,
+    EditReservationComponent,
+    AddReservationComponent,
+    ListReservationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-    ])
+    ReactiveFormsModule,
+    routing
   ],
-  providers: [],
+  providers: [
+    ContactTypeService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
