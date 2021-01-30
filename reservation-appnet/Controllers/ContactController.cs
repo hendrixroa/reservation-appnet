@@ -99,6 +99,7 @@ namespace reservation_appnet.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(ContactCreateDTO contactCreateDTO)
         {
+            _logger.LogDebug("JAJAJAJAJA");
             var contactType = ContactTypeExists(contactCreateDTO.ContactType.Description);
 
             if (contactType == null)
@@ -116,7 +117,7 @@ namespace reservation_appnet.Controllers
             _context.Contacts.Add(contact);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetContact", new { id = contact.Id }, contact);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

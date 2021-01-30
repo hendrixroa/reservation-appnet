@@ -10,6 +10,7 @@ namespace reservation_appnet.Models
         public string Name { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
         public DateTime Birthdate { get; set; }
 
         [Required]
@@ -29,6 +30,7 @@ namespace reservation_appnet.Models
         public string Name { get; set; }
 
         [Required]
+        [DataType(DataType.Date)]
         public DateTime Birthdate { get; set; }
 
         [Required]

@@ -18,7 +18,8 @@ import { AddReservationComponent } from './reservation/add-reservation/add-reser
 import { ListReservationComponent } from './reservation/list-reservation/list-reservation.component';
 
 import {routing} from "./app.routing";
-import {ContactTypeService} from "./services/contact.type.service";
+import { ContactTypeService } from "./services/contact.type.service";
+import { ContactService } from './services/contact.service'; 
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import {ContactTypeService} from "./services/contact.type.service";
   ],
   providers: [
     ContactTypeService,
+    ContactService,
   ],
   bootstrap: [AppComponent]
 })
