@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace reservation_appnet.Controllers
                 return BadRequest();
             }
 
-            var contactType = ContactTypeExists(contactCreateDTO.ContactType.Description);
+            var contactType = ContactTypeExists(contactCreateDTO.ContactType);
 
             if(contactType == null)
             {
@@ -76,8 +77,9 @@ namespace reservation_appnet.Controllers
                 Id = id,
                 Name = contactCreateDTO.Name,
                 Birthdate = contactCreateDTO.Birthdate,
+                ContactType = contactCreateDTO.ContactType,
                 Phone = contactCreateDTO.Phone,
-                ContactType = contactType,
+                UpdatedAt = DateTime.UtcNow
             };
             _context.Entry(contact).State = EntityState.Modified;
 
@@ -99,8 +101,7 @@ namespace reservation_appnet.Controllers
         [HttpPost]
         public async Task<ActionResult<Contact>> PostContact(ContactCreateDTO contactCreateDTO)
         {
-            _logger.LogDebug("JAJAJAJAJA");
-            var contactType = ContactTypeExists(contactCreateDTO.ContactType.Description);
+            var contactType = ContactTypeExists(contactCreateDTO.ContactType);
 
             if (contactType == null)
             {
@@ -111,8 +112,8 @@ namespace reservation_appnet.Controllers
             {
                 Name = contactCreateDTO.Name,
                 Birthdate = contactCreateDTO.Birthdate,
-                ContactType = contactType,
                 Phone = contactCreateDTO.Phone,
+                ContactType = contactType.Description,
             };
             _context.Contacts.Add(contact);
             await _context.SaveChangesAsync();
@@ -150,7 +151,7 @@ namespace reservation_appnet.Controllers
             {
                 Id = contact.Id,
                 Name = contact.Name,
-                ContactType = new ContactTypeCreateDTO { Description = contact.ContactType.Description },
+                ContactType = contact.ContactType,
                 Birthdate = contact.Birthdate,
                 Phone = contact.Phone,
             };

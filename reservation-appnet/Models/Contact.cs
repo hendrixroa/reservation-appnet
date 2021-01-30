@@ -14,7 +14,7 @@ namespace reservation_appnet.Models
         public DateTime Birthdate { get; set; }
 
         [Required]
-        public ContactTypeCreateDTO ContactType { get; set; }
+        public string ContactType { get; set; }
 
         public string Phone { get; set; }
     }
@@ -34,10 +34,10 @@ namespace reservation_appnet.Models
         public DateTime Birthdate { get; set; }
 
         [Required]
-        public ContactType ContactType { get; set; }
+        public string ContactType { get; set; }
 
         public string Phone { get; set; }
 
         public List<Reservation> Reservations { get; set; }
     }
-}
+}   

@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  reservation-appnet:
+    image: ${DOCKER_REGISTRY-}reservationappnet
+    build:
+      context: .
+      dockerfile: reservation-appnet/Dockerfile

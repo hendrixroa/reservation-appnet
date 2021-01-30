@@ -53,7 +53,7 @@ namespace reservation_appnet.Controllers
                 return NotFound();
             }
 
-            var contactType = new ContactType { Id = id, Description = contactTypeCreateDTO.Description, UpdatedAt = DateTime.UtcNow};
+            var contactType = new ContactType { Id = id, Description = contactTypeCreateDTO.Description, UpdatedAt = DateTime.UtcNow };
             _context.Entry(contactType).State = EntityState.Modified;
 
             try
@@ -73,7 +73,7 @@ namespace reservation_appnet.Controllers
         {
             try
             {
-                var contactType = new ContactType { Description = contactTypeCreateDTO.Description, CreatedAt = DateTime.UtcNow };
+                var contactType = new ContactType { Description = contactTypeCreateDTO.Description };
                 _context.ContactTypes.Add(contactType);
                 await _context.SaveChangesAsync();
             }

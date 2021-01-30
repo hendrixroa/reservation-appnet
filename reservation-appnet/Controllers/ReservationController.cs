@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using reservation_appnet;
 using reservation_appnet.Data;
 
 namespace reservation_appnet.Controllers
@@ -21,18 +19,18 @@ namespace reservation_appnet.Controllers
             _context = context;
         }
 
-        // GET: api/Reservation
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservation()
+        public async Task<ActionResult<IEnumerable<ReservationListDTO>>> GetReservations()
         {
-            return await _context.Reservation.ToListAsync();
+            return await _context.Reservations
+                .Select(reservation => ReservationListToDTO(reservation))
+                .ToListAsync();
         }
 
-        // GET: api/Reservation/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reservation>> GetReservation(int id)
         {
-            var reservation = await _context.Reservation.FindAsync(id);
+            var reservation = await _context.Reservations.FindAsync(id);
 
             if (reservation == null)
             {
@@ -42,16 +40,17 @@ namespace reservation_appnet.Controllers
             return reservation;
         }
 
-        // PUT: api/Reservation/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservation(int id, Reservation reservation)
+        public async Task<IActionResult> PutReservation(int id, ReservationCreateDTO reservationDTO)
         {
-            if (id != reservation.Id)
+            if (ReservationExists(id))
             {
-                return BadRequest();
+                return NotFound();
             }
 
+            var reservation = DTOCreateToReservation(reservationDTO);
+            reservation.Id = id;
+            reservation.UpdatedAt = DateTime.UtcNow;
             _context.Entry(reservation).State = EntityState.Modified;
 
             try
@@ -60,41 +59,39 @@ namespace reservation_appnet.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ReservationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest();
             }
 
             return NoContent();
         }
 
-        // POST: api/Reservation
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
+        [HttpPost("{contactId}")]
+        public async Task<ActionResult> PostReservation(int contactId, ReservationCreateDTO reservationCreateDTO)
         {
-            _context.Reservation.Add(reservation);
+            var contact = await _context.Contacts.FindAsync(contactId);
+            if (contact == null)
+            {
+                return NotFound();
+            }
+
+            var reservation = DTOCreateToReservation(reservationCreateDTO);
+            reservation.Contact = contact;
+            _context.Reservations.Add(reservation);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
+            return NoContent();
         }
 
-        // DELETE: api/Reservation/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
-            var reservation = await _context.Reservation.FindAsync(id);
+            var reservation = await _context.Reservations.FindAsync(id);
             if (reservation == null)
             {
                 return NotFound();
             }
 
-            _context.Reservation.Remove(reservation);
+            _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +99,27 @@ namespace reservation_appnet.Controllers
 
         private bool ReservationExists(int id)
         {
-            return _context.Reservation.Any(e => e.Id == id);
+            return _context.Reservations.Any(e => e.Id == id);
         }
+
+        private static ReservationListDTO ReservationListToDTO(Reservation reservation) =>
+            new ReservationListDTO
+            {
+                Id = reservation.Id,
+                Title = reservation.Title,
+                Description = reservation.Description,
+                Rating = reservation.Rating,
+                Favorite = reservation.Favorite,
+            };
+
+        private static Reservation DTOCreateToReservation(ReservationCreateDTO reservationDTO) =>
+           new Reservation
+           {
+               Title = reservationDTO.Title,
+               Description = reservationDTO.Description,
+               Rating = reservationDTO.Rating,
+               Favorite = reservationDTO.Favorite,
+           };
+
     }
 }

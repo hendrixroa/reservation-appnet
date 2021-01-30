@@ -29,10 +29,11 @@ namespace reservation_appnet.Migrations
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("ContactTypeId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ContactType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
@@ -44,12 +45,11 @@ namespace reservation_appnet.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ContactTypeId");
 
                     b.ToTable("Contacts");
                 });
@@ -61,7 +61,7 @@ namespace reservation_appnet.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
@@ -71,12 +71,30 @@ namespace reservation_appnet.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
                     b.ToTable("ContactTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Contact Type 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Contact Type 2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Contact Type 3"
+                        });
                 });
 
             modelBuilder.Entity("reservation_appnet.Reservation", b =>
@@ -86,15 +104,30 @@ namespace reservation_appnet.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<int?>("ContactId")
+                    b.Property<int>("ContactId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("Favorite")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
@@ -104,20 +137,15 @@ namespace reservation_appnet.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("reservation_appnet.Models.Contact", b =>
-                {
-                    b.HasOne("reservation_appnet.Models.ContactType", "ContactType")
-                        .WithMany()
-                        .HasForeignKey("ContactTypeId");
-
-                    b.Navigation("ContactType");
-                });
-
             modelBuilder.Entity("reservation_appnet.Reservation", b =>
                 {
-                    b.HasOne("reservation_appnet.Models.Contact", null)
+                    b.HasOne("reservation_appnet.Models.Contact", "Contact")
                         .WithMany("Reservations")
-                        .HasForeignKey("ContactId");
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
                 });
 
             modelBuilder.Entity("reservation_appnet.Models.Contact", b =>
