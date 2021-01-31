@@ -82,6 +82,54 @@ namespace reservation_appnet.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}/favorite")]
+        public async Task<ActionResult> AddFavoriteReservation(int id, ReservationFavoriteDTO reservationFavoriteDTO)
+        {
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            reservation.Favorite = reservationFavoriteDTO.Favorite;
+            _context.Entry(reservation).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/favorite")]
+        public async Task<ActionResult> AddRatingReservation(int id, ReservationRatingDTO reservationRatingDTO)
+        {
+            var reservation = await _context.Reservations.FindAsync(id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            reservation.Rating = reservationRatingDTO.Rating;
+            _context.Entry(reservation).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest();
+            }
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReservation(int id)
         {
@@ -92,7 +140,14 @@ namespace reservation_appnet.Controllers
             }
 
             _context.Reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest();
+            }
 
             return NoContent();
         }

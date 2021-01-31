@@ -6,6 +6,7 @@ import {ChangeEvent} from "@ckeditor/ckeditor5-angular";
 
 import { CreateReservation } from "../../models/reservation.model";
 import {ReservationService} from "../../services/reservation.service";
+import {UploadAdapterService} from "../../services/upload.adapter.service";
 
 @Component({
   selector: 'app-add-reservation',
@@ -34,7 +35,6 @@ export class AddReservationComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    console.log('data: ', this.addForm.invalid, this.dataEditor);
     if (this.addForm.invalid || !this.dataEditor) {
       return;
     }
@@ -52,7 +52,7 @@ export class AddReservationComponent implements OnInit {
 
   onReady(eventData) {
     eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
-      return new UploadAdapter(loader);
+      return new UploadAdapterService(loader);
     };
   }
 
@@ -64,21 +64,4 @@ export class AddReservationComponent implements OnInit {
   }
 }
 
-class UploadAdapter {
-  loader: any;
 
-  constructor( loader ) {
-    this.loader = loader;
-  }
-
-  upload() {
-    return this.loader.file
-      .then( file => new Promise( ( resolve, reject ) => {
-        let myReader= new FileReader();
-        myReader.onloadend = (e) => {
-          resolve({ default: myReader.result });
-        }
-        myReader.readAsDataURL(file);
-      }));
-  };
-}

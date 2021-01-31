@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {first} from "rxjs/operators";
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import { ReservationService } from "../../services/reservation.service";
+import {UploadAdapterService} from "../../services/upload.adapter.service";
+import {ChangeEvent} from "@ckeditor/ckeditor5-angular";
 
 @Component({
   selector: 'app-edit-reservation',
@@ -12,6 +16,9 @@ import { ReservationService } from "../../services/reservation.service";
 export class EditReservationComponent implements OnInit {
   reservationId: number;
   editForm: FormGroup;
+  public Editor = ClassicEditor;
+  dataEditor: any;
+  submitted = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,6 +43,11 @@ export class EditReservationComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted = true;
+
+    if (this.editForm.invalid || !this.dataEditor) {
+      return;
+    }
 
     this.reservationService.update(this.reservationId, this.editForm.value)
       .pipe(first())
@@ -46,6 +58,19 @@ export class EditReservationComponent implements OnInit {
         error => {
           alert(error);
         });
+  }
+
+  onReady(eventData) {
+    eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
+      return new UploadAdapterService(loader);
+    };
+  }
+
+  onChangeEditor( { editor }: ChangeEvent ) {
+    if(editor) {
+      const data = editor.getData();
+      this.dataEditor = data;
+    }
   }
 
 }

@@ -26,7 +26,7 @@ export class ListReservationComponent implements OnInit {
             Id: reservation.Id,
             Title: reservation.Title,
             Rating: reservation.Rating,
-            Favorite: reservation.Favorite,
+            Favorite: reservation.Favorite ? 1 : 0,
             CreatedAt: reservation.CreatedAt,
           };
         });
@@ -49,6 +49,10 @@ export class ListReservationComponent implements OnInit {
   }
 
   rateChange(){
+    console.log('favorite: ', this.reservations.map(item => item.Favorite));
+  }
+
+  favoriteChange(){
     console.log('rate: ', this.reservations.map(item => item.Rating));
   }
 }

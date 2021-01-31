@@ -21,8 +21,17 @@
                     </ng-template>
                 </ngb-rating>
             </td>
-            <td></td>
-            <td>{{reservation.CreatedAt}}</td>
+            <td>
+                Add favorites
+                <ng-template #t let-fill="fill">
+                    <span class="star" [class.full]="fill === 100">
+                        <span class="half" [style.width.%]="fill">&hearts;</span>&hearts;
+                    </span>
+                </ng-template>
+
+                <ngb-rating [(rate)]="reservation.Rating" [starTemplate]="t" [readonly]="false" [max]="1" (rateChange)="favoriteChange()"></ngb-rating>
+            </td>
+            <td>{{reservation.CreatedAt | date:'fullDate'}}</td>
             <td>
                 <button class="btn btn-success" (click)="delete(reservation.Id)"> Delete</button>
                 <button class="btn btn-success" (click)="edit(reservation.Id)" style="margin-left: 20px;"> Edit</button>

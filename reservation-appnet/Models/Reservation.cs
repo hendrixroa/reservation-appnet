@@ -24,6 +24,19 @@ namespace reservation_appnet
         public DateTime CreatedAt { get; set; }
     }
 
+    public class ReservationFavoriteDTO
+    {
+        [Required]
+        public bool Favorite { get; set; }
+    }
+
+    public class ReservationRatingDTO
+    {
+        [Range(0, 5)]
+        [Required]
+        public int Rating { get; set; }
+    }
+
     public class Reservation : BaseModel
     {
         [Required]

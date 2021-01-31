@@ -43,7 +43,7 @@ export class AddContactComponent implements OnInit {
 
     const payload = {
       ...this.addForm.value,
-      ContactType: { Description: this.contactType.value },
+      ContactType: this.contactType.value,
     };
     this.contactService.create(payload)
       .subscribe();
