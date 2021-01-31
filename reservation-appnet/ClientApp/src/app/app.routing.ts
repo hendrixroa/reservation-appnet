@@ -18,8 +18,9 @@ const routes: Routes = [
   { path: 'list-contact', component: ListContactComponent },
   { path: 'edit-contact/:id', component: EditContactComponent },
   { path: 'add-reservation', component: AddReservationComponent },
+  { path: 'list-reservation', component: ListReservationComponent },
   { path: 'edit-reservation/:id', component: EditReservationComponent },
-  { path: '', component: ListReservationComponent, pathMatch: 'full' },
+  { path: '', redirectTo: '/list-reservation',  pathMatch: 'full' },
 ];
 
 export const routing = RouterModule.forRoot(routes);

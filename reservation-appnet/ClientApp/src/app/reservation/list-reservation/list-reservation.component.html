@@ -1,18 +1,28 @@
-<div class="col-md-6 reservation-list-container">
+<div class="col-md-12 reservation-list-container">
     <h2 style="margin: auto">Reservation List</h2>
     <table class="table table-striped">
         <thead>
         <tr>
             <th class="hidden">Id</th>
             <th>Title</th>
-            <th>Description</th>
+            <th></th>
+            <th></th>
+            <th>Date</th>
         </tr>
         </thead>
         <tbody>
         <tr *ngFor="let reservation of reservations">
             <td class="hidden">{{reservation.Id}}</td>
             <td>{{reservation.Title}}</td>
-            <td>{{reservation.Description}}</td>
+            <td>
+                <ngb-rating [(rate)]="reservation.Rating" [max]="5" (rateChange)="rateChange()">
+                    <ng-template let-fill="fill" let-index="index">
+                        <span class="star" [class.filled]="fill === 100" >&#9733;</span>
+                    </ng-template>
+                </ngb-rating>
+            </td>
+            <td></td>
+            <td>{{reservation.CreatedAt}}</td>
             <td>
                 <button class="btn btn-success" (click)="delete(reservation.Id)"> Delete</button>
                 <button class="btn btn-success" (click)="edit(reservation.Id)" style="margin-left: 20px;"> Edit</button>

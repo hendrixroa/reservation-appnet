@@ -9,7 +9,7 @@ import { ReservationService } from "../../services/reservation.service";
   styleUrls: ['./list-reservation.component.css']
 })
 export class ListReservationComponent implements OnInit {
-
+  rating: number;
   reservations: ListReservation[];
 
   constructor(private router: Router, private reservationService: ReservationService) { }
@@ -21,7 +21,15 @@ export class ListReservationComponent implements OnInit {
   list() {
     this.reservationService.list()
       .subscribe(data => {
-        this.reservations = data;
+        this.reservations = data.map(reservation => {
+          return {
+            Id: reservation.Id,
+            Title: reservation.Title,
+            Rating: reservation.Rating,
+            Favorite: reservation.Favorite,
+            CreatedAt: reservation.CreatedAt,
+          };
+        });
       });
   }
 
@@ -38,5 +46,9 @@ export class ListReservationComponent implements OnInit {
       .subscribe(() => {
         this.list();
       });
+  }
+
+  rateChange(){
+    console.log('rate: ', this.reservations.map(item => item.Rating));
   }
 }

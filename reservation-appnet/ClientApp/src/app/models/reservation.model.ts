@@ -4,6 +4,10 @@ export class CreateReservation {
   Description: string;
 }
 
-export class ListReservation extends CreateReservation {
+export class ListReservation {
+  Id?: string;
+  Title: string;
+  Rating: number;
+  Favorite: boolean;
   CreatedAt: Date;
 }

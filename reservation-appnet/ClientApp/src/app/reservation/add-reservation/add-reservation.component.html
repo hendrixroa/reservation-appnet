@@ -1,4 +1,8 @@
-<div class="col-md-6 add-reservation-container">
+<div class="col-md-12 add-reservation-container">
+    <app-add-contact></app-add-contact>
+</div>
+
+<div class="col-md-12 add-reservation-container">
     <h2 class="text-center">Add Reservation</h2>
     <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
 
@@ -7,10 +11,7 @@
             <input type="text" formControlName="Title" placeholder="Title" name="Title" class="form-control" [ngClass]="{ 'is-invalid': submitted && fields.Title.errors }" id="Title" required>
         </div>
 
-        <div class="form-group">
-            <label for="Description">Description :</label>
-            <input type="text" formControlName="Description" placeholder="Description" name="Description" class="form-control" id="Description" [ngClass]="{ 'is-invalid': submitted && fields.Description.errors }" id="Description" required>
-        </div>
+        <ckeditor [editor]="Editor" data="" (ready)="onReady($event)" (change)="onChangeEditor($event)"></ckeditor>
 
         <button class="btn btn-success">Add</button>
     </form>

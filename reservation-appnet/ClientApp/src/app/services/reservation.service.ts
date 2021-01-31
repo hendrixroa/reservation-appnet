@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable} from "rxjs/index";
-import {CreateReservation} from "../models/create.reservation.model";
+import {CreateReservation} from "../models/reservation.model";
 
 @Injectable()
 export class ReservationService {
@@ -20,8 +20,8 @@ export class ReservationService {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
 
-  create(createReservationPayload: CreateReservation) : Observable<any> {
-    return this.http.post<any>(this.baseUrl, createReservationPayload);
+  create(contactId: number, createReservationPayload: CreateReservation) : Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/contact/${contactId}`, createReservationPayload);
   }
 
   update(id: number, updateReservationPayload: CreateReservation) {

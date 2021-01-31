@@ -65,7 +65,7 @@ namespace reservation_appnet.Controllers
             return NoContent();
         }
 
-        [HttpPost("{contactId}")]
+        [HttpPost("contact/{contactId}")]
         public async Task<ActionResult> PostReservation(int contactId, ReservationCreateDTO reservationCreateDTO)
         {
             var contact = await _context.Contacts.FindAsync(contactId);

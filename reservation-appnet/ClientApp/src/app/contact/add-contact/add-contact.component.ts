@@ -22,6 +22,7 @@ export class AddContactComponent implements OnInit {
   addForm: FormGroup;
   contactTypes: string[];
   submitted = false;
+  enableAddButton = true;
 
   ngOnInit() {
     this.addForm = this.formBuilder.group({
@@ -45,9 +46,7 @@ export class AddContactComponent implements OnInit {
       ContactType: { Description: this.contactType.value },
     };
     this.contactService.create(payload)
-      .subscribe( data => {
-        this.router.navigate(['list-contact']);
-      });
+      .subscribe();
   }
 
   list() {
@@ -65,6 +64,27 @@ export class AddContactComponent implements OnInit {
 
   changeContactType(e) {
     this.contactType.setValue(e.target.value);
+  }
+
+  changeName(e) {
+    console.log('name: ', e.target.value);
+    const name = e.target.value;
+    if(name) {
+      this.contactService.list({ Name: name })
+        .subscribe(data => {
+          if(data.length > 0) {
+            this.addForm.setValue({
+              Name: data[0].Name,
+              Birthdate: data[0].Birthdate.split('T')[0],
+              Phone: data[0].Phone,
+              ContactType: data[0].ContactType,
+            });
+            this.enableAddButton = false;
+          } else {
+            this.enableAddButton = true;
+          }
+        });
+    }
   }
 
 }
