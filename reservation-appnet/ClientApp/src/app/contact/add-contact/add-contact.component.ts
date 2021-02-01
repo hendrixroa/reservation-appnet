@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import { ContactService } from "../../services/contact.service";
 import {ContactType} from "../../models/contact.type.model";
 import {ContactTypeService} from "../../services/contact.type.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-add-contact',
@@ -17,6 +18,7 @@ export class AddContactComponent implements OnInit {
     private router: Router,
     private contactService: ContactService,
     private contactTypeService: ContactTypeService,
+    private authService: AuthService,
   ) { }
 
   addForm: FormGroup;
@@ -46,7 +48,9 @@ export class AddContactComponent implements OnInit {
       ContactType: this.contactType.value,
     };
     this.contactService.create(payload)
-      .subscribe();
+      .subscribe(() => {
+        this.setContactSession(payload.Name);
+      });
   }
 
   list() {
@@ -66,8 +70,19 @@ export class AddContactComponent implements OnInit {
     this.contactType.setValue(e.target.value);
   }
 
+  setContactSession(name: string) {
+    this.contactService.list({ Name: name })
+      .subscribe(data => {
+        if(data.length > 0) {
+          this.authService.setUser({
+            Id: data[0].Id,
+            Name: data[0].Name,
+          });
+        }
+      });
+  }
+
   changeName(e) {
-    console.log('name: ', e.target.value);
     const name = e.target.value;
     if(name) {
       this.contactService.list({ Name: name })
@@ -80,6 +95,10 @@ export class AddContactComponent implements OnInit {
               ContactType: data[0].ContactType,
             });
             this.enableAddButton = false;
+            this.authService.setUser({
+              Id: data[0].Id,
+              Name: data[0].Name,
+            });
           } else {
             this.enableAddButton = true;
           }

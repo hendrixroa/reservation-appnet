@@ -17,7 +17,7 @@ export class EditReservationComponent implements OnInit {
   reservationId: number;
   editForm: FormGroup;
   public Editor = ClassicEditor;
-  dataEditor: any;
+  dataEditor: string;
   submitted = false;
 
   constructor(
@@ -31,14 +31,17 @@ export class EditReservationComponent implements OnInit {
     this.reservationId = Number(this.route.snapshot.paramMap.get('id'));
     this.editForm = this.formBuilder.group({
       Title: ['', Validators.required],
-      Description: ['', Validators.required],
     });
+  }
+
+  load(eventData) {
     this.reservationService.detail(this.reservationId)
       .subscribe(data => {
         this.editForm.setValue({
           Title: data.Title,
-          Description: data.Description,
         });
+        this.dataEditor = data.Description;
+        eventData.data.set(this.dataEditor);
       });
   }
 
@@ -49,18 +52,23 @@ export class EditReservationComponent implements OnInit {
       return;
     }
 
-    this.reservationService.update(this.reservationId, this.editForm.value)
-      .pipe(first())
+    this.reservationService
+      .update(this.reservationId, {
+        ...this.editForm.value,
+        Description: this.dataEditor,
+      })
       .subscribe(
         data => {
           this.router.navigate(['list-reservation']);
         },
         error => {
+          console.error(error);
           alert(error);
         });
   }
 
   onReady(eventData) {
+    this.load(eventData);
     eventData.plugins.get('FileRepository').createUploadAdapter = function (loader) {
       return new UploadAdapterService(loader);
     };

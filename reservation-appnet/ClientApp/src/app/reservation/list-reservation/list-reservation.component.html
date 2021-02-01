@@ -1,5 +1,7 @@
 <div class="col-md-12 reservation-list-container">
-    <h2 style="margin: auto">Reservation List</h2>
+    <div class="text-center">
+        <h2 style="margin: auto">Reservation List</h2>
+    </div>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -15,28 +17,40 @@
             <td class="hidden">{{reservation.Id}}</td>
             <td>{{reservation.Title}}</td>
             <td>
-                <ngb-rating [(rate)]="reservation.Rating" [max]="5" (rateChange)="rateChange()">
-                    <ng-template let-fill="fill" let-index="index">
+                <ngb-rating [(rate)]="reservation.Rating" [max]="5" (rateChange)="rateChange(reservation)">
+                    <ng-template let-fill="fill" let-index="Reservation.Id">
                         <span class="star" [class.filled]="fill === 100" >&#9733;</span>
                     </ng-template>
                 </ngb-rating>
             </td>
             <td>
                 Add favorites
-                <ng-template #t let-fill="fill">
-                    <span class="star" [class.full]="fill === 100">
+                <ng-template #t let-fill="fill" let-index="Reservation.Id">
+                    <span class="heart_favorite" [class.full]="fill === 100">
                         <span class="half" [style.width.%]="fill">&hearts;</span>&hearts;
                     </span>
                 </ng-template>
 
-                <ngb-rating [(rate)]="reservation.Rating" [starTemplate]="t" [readonly]="false" [max]="1" (rateChange)="favoriteChange()"></ngb-rating>
+                <ngb-rating [(rate)]="reservation.Favorite" [starTemplate]="t" [readonly]="false" [max]="1" (rateChange)="favoriteChange(reservation)"></ngb-rating>
             </td>
             <td>{{reservation.CreatedAt | date:'fullDate'}}</td>
             <td>
-                <button class="btn btn-success" (click)="delete(reservation.Id)"> Delete</button>
-                <button class="btn btn-success" (click)="edit(reservation.Id)" style="margin-left: 20px;"> Edit</button>
+                <button class="btn btn-warning" (click)="edit(reservation.Id)" style="margin-right: 20px;"> Edit</button>
+                <button class="btn btn-danger" (click)="delete(reservation.Id)"> Delete</button>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" [ngClass]="{ 'disabled': disabledPrevious }">
+                <a class="page-link" tabindex="-1" aria-disabled="true" (click)="goPrevious()">Previous</a>
+            </li>
+            <li *ngFor="let page of pages" class="page-item" [ngClass]="{ 'active': page == currentPage }"><a (click)="goPage(page)" class="page-link">{{page}}</a></li>
+            <li class="page-item" [ngClass]="{ 'disabled': disabledNext }">
+                <a class="page-link" (click)="goNext()">Next</a>
+            </li>
+        </ul>
+    </nav>
 </div>

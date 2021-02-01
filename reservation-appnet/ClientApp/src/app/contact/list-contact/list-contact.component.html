@@ -1,1 +1,30 @@
-<p>list-contact works!</p>
+<div class="col-md-12 contact-list-container">
+    <div class="text-center">
+        <button class="btn btn-info" (click)="add()"> Add Contact</button>
+    </div>
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="hidden">Id</th>
+                <th>Name</th>
+                <th>Birthdate</th>
+                <th>Phone</th>
+                <th>Contact Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let contact of contacts">
+                <td class="hidden">{{contact.Id}}</td>
+                <td>{{contact.Name}}</td>
+                <td>{{contact.Birthdate}}</td>
+                <td>{{contact.Phone}}</td>
+                <td>{{contact.ContactType}}</td>
+                <td>
+                    <button class="btn btn-warning" (click)="edit(contact.Id)" style="margin-right: 20px;">Edit</button>
+                    <button class="btn btn-danger" (click)="delete(contact.Id)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

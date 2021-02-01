@@ -1,4 +1,4 @@
-<div class="col-md-6 edit-reservation-container">
+<div class="col-md-12 edit-reservation-container">
     <h2 class="text-center">Edit Reservation</h2>
     <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
 
@@ -6,9 +6,8 @@
             <label for="Title">Title :</label>
             <input type="text" formControlName="Title" placeholder="Title" name="Title" class="form-control" [ngClass]="{ 'is-invalid': submitted && fields.Title.errors }" id="Title" required>
         </div>
-
-        <ckeditor [editor]="Editor" data="" (ready)="onReady($event)" (change)="onChangeEditor($event)"></ckeditor>
-
+        <ckeditor [editor]="Editor" [data]="dataEditor" (ready)="onReady($event)" (change)="onChangeEditor($event)"></ckeditor>
         <button class="btn btn-success">Edit</button>
     </form>
+
 </div>

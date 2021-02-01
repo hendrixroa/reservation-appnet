@@ -12,7 +12,7 @@ export class ContactService {
     this.baseUrl = baseUrl + this.nameEndpoint;
   }
 
-  list(params: any): Observable<any> {
+  list(params?: any): Observable<any> {
     return this.http.get(this.baseUrl, { params });
   }
 

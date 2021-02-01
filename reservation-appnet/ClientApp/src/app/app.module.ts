@@ -21,6 +21,7 @@ import {routing} from "./app.routing";
 import { ContactTypeService } from "./services/contact.type.service";
 import { ContactService } from './services/contact.service';
 import { ReservationService } from "./services/reservation.service";
+import {AuthService} from "./services/auth.service";
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { ReservationService } from "./services/reservation.service";
     ContactTypeService,
     ContactService,
     ReservationService,
+    AuthService,
   ],
   bootstrap: [AppComponent]
 })

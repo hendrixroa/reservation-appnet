@@ -1,28 +1,26 @@
-<div class="col-md-6 add-contact-container">
-    <h2 class="text-center">Add Contact</h2>
+<div class="col-md-12 add-contact-container">
     <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
-
-        <div class="form-group">
-            <label for="Name">Name :</label>
-            <input type="text" formControlName="Name" placeholder="Name" name="Name" class="form-control" (keyup)="changeName($event)" [ngClass]="{ 'is-invalid': submitted && fields.Name.errors }" id="Name" required>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="">&#9786;</span>
         </div>
-
-        <div class="form-group">
-            <label for="Birthdate">Birthdate :</label>
-            <input class="form-control" [ngClass]="{ 'is-invalid': submitted && fields.Birthdate.errors }" type="date" placeholder="yyyy-mm-dd"
-                   name="Birthdate" formControlName="Birthdate" id="Birthdate" required>
+        <input type="text" formControlName="Name" placeholder="Name" name="Name" class="form-control" (keyup)="changeName($event)" [ngClass]="{ 'is-invalid': submitted && fields.Name.errors }" id="Name" required>        <div class="input-group-prepend">
+            <span class="input-group-text" id="">◑</span>
         </div>
-
-        <div class="form-group">
-            <label for="Phone">Phone :</label>
-            <input type="tel" formControlName="Phone" placeholder="Phone" name="Phone" class="form-control" id="Phone">
-        </div>
-
         <select class="form-control" [ngClass]="{ 'is-invalid': submitted && fields.ContactType.errors }" (change)="changeContactType($event)" formControlName="ContactType" required>
-            <option value="" disabled>Choose contact type</option>
+            <option value="" default disabled>Choose contact type</option>
             <option *ngFor="let type of contactTypes" [value]="type">{{type}}</option>
         </select>
-
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="">&#9742;</span>
+        </div>
+        <input type="tel" formControlName="Phone" placeholder="Phone" name="Phone" class="form-control" id="Phone">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="">📅</span>
+        </div>
+        <input class="form-control" [ngClass]="{ 'is-invalid': submitted && fields.Birthdate.errors }" type="date" placeholder="yyyy-mm-dd"
+               name="Birthdate" formControlName="Birthdate" id="Birthdate" required>
         <button *ngIf="enableAddButton" class="btn btn-success">Add</button>
+    </div>
     </form>
 </div>

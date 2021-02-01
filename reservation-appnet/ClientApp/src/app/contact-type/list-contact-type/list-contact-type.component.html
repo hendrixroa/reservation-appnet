@@ -1,6 +1,8 @@
-<div class="col-md-6 contact-type-list-container">
-    <h2 style="margin: auto"> Contact types</h2>
-    <button class="btn btn-danger" style="width:100px" (click)="add()"> Add</button>
+<div class="col-md-12 contact-type-list-container">
+    <div class="text-center">
+        <button class="btn btn-info" (click)="add()">Add Contact type</button>
+    </div>
+    <br>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -13,8 +15,8 @@
                 <td class="hidden">{{type.Id}}</td>
                 <td>{{type.Description}}</td>
                 <td>
-                    <button class="btn btn-success" (click)="delete(type.Id)"> Delete</button>
-                    <button class="btn btn-success" (click)="edit(type.Id)" style="margin-left: 20px;"> Edit</button>
+                    <button class="btn btn-warning" (click)="edit(type.Id)" style="margin-right: 20px;"> Edit</button>
+                    <button class="btn btn-danger" (click)="delete(type.Id)"> Delete</button>
                 </td>
             </tr>
         </tbody>

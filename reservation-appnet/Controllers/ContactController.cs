@@ -10,7 +10,7 @@ using reservation_appnet.Models;
 
 namespace reservation_appnet.Controllers
 {
-    public class ContactQuery
+    public class ContactQuery : QueryPagination
     {
         public string? Name { get; set; }
     }
@@ -30,18 +30,48 @@ namespace reservation_appnet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContactListDTO>>> GetContacts([FromQuery] ContactQuery query)
+        public async Task<ActionResult<ResultPagination>> GetContacts([FromQuery] ContactQuery query)
         {
+
+            var page = query.Page;
+            var limit = query.Limit;
+            if(query.Page == null)
+            {
+                page = 1;
+            }
+            if(query.Limit == null)
+            {
+                limit = 20;
+            }
+            
             if(query.Name != null)
             {
-                return await _context.Contacts
+                var item = await _context.Contacts
                     .Where(contact => contact.Name == query.Name)
                     .Select(contact => ContactListToDTO(contact))
                     .ToListAsync();
+                return new ResultPagination
+                {
+                    Items = item,
+                    Page = (int)page,
+                    Pages = 1,
+                    Count = 1,  
+                };
             }
-            return await _context.Contacts
+            var items = await _context.Contacts
+                .Skip((int)((page - 1) * limit))
+                .Take((int)limit)
                 .Select(contact => ContactListToDTO(contact))
                 .ToListAsync();
+
+            var count = _context.Contacts.Count();
+            return new ResultPagination
+            {
+                Items = items,
+                Page = (int)page,
+                Pages = (int)Math.Round((decimal)(count / limit)),
+                Count = count
+            };
         }
 
         [HttpGet("{id}")]

@@ -1,13 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using reservation_appnet.Data;
+using reservation_appnet.Models;
 
 namespace reservation_appnet.Controllers
 {
+
     [Route("/reservations")]
     [ApiController]
     public class ReservationController : ControllerBase
@@ -20,11 +21,34 @@ namespace reservation_appnet.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReservationListDTO>>> GetReservations()
+        public async Task<ActionResult<ResultPagination>> GetReservations([FromQuery] QueryPagination query)
         {
-            return await _context.Reservations
+            var page = query.Page;
+            var limit = query.Limit;
+            if (query.Page == null)
+            {
+                page = 1;
+            }
+            if (query.Limit == null)
+            {
+                limit = 20;
+            }
+
+            var items = await _context.Reservations
+                .Skip((int)((page - 1) * limit))
+                .Take((int)limit)
                 .Select(reservation => ReservationListToDTO(reservation))
                 .ToListAsync();
+
+            var count = _context.Reservations.Count();
+
+            return new ResultPagination
+            {
+                Items = items,
+                Pages = (int)Math.Round((decimal)(count / limit)),
+                Page = (int)page,
+                Count = count
+            };
         }
 
         [HttpGet("{id}")]
@@ -43,7 +67,7 @@ namespace reservation_appnet.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutReservation(int id, ReservationCreateDTO reservationDTO)
         {
-            if (ReservationExists(id))
+            if (!ReservationExists(id))
             {
                 return NotFound();
             }
@@ -106,7 +130,7 @@ namespace reservation_appnet.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}/favorite")]
+        [HttpPut("{id}/rating")]
         public async Task<ActionResult> AddRatingReservation(int id, ReservationRatingDTO reservationRatingDTO)
         {
             var reservation = await _context.Reservations.FindAsync(id);
@@ -155,6 +179,11 @@ namespace reservation_appnet.Controllers
         private bool ReservationExists(int id)
         {
             return _context.Reservations.Any(e => e.Id == id);
+        }
+
+        private int ReservationCount()
+        {
+            return _context.Reservations.Count();
         }
 
         private static ReservationListDTO ReservationListToDTO(Reservation reservation) =>

@@ -7,6 +7,7 @@ import {ChangeEvent} from "@ckeditor/ckeditor5-angular";
 import { CreateReservation } from "../../models/reservation.model";
 import {ReservationService} from "../../services/reservation.service";
 import {UploadAdapterService} from "../../services/upload.adapter.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-add-reservation',
@@ -24,6 +25,7 @@ export class AddReservationComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private reservationService: ReservationService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
@@ -34,12 +36,13 @@ export class AddReservationComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    const user = this.authService.getUser();
 
-    if (this.addForm.invalid || !this.dataEditor) {
+    if (this.addForm.invalid || !this.dataEditor || !user) {
       return;
     }
 
-    this.reservationService.create(1, {
+    this.reservationService.create(user.Id, {
         ...this.addForm.value,
         Description: this.dataEditor,
       })
